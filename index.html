@@ -3,91 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onshape Drawing Checklist</title>
+    <title>Professional 2D Checklist</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* 針對長清單的額外樣式優化 */
+        .category-header {
+            background: #e5e7eb;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #374151;
+            margin: 15px 0 8px 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .category-header:hover { background: #d1d5db; }
+        .category-content { display: block; } /* 預設展開 */
+        .item-title { font-size: 13.5px !important; }
+        .item-desc { font-size: 11px !important; color: #9ca3af; }
+        .checklist-item { padding: 10px 14px !important; margin-bottom: 6px; }
+    </style>
 </head>
 <body>
 
     <div class="sidebar-container">
         <div class="header">
-            <h1 class="header-title">2D check list</h1>
-            <button class="reset-btn" onclick="resetList()" title="重置所有勾選狀態">重置</button>
+            <h1 class="header-title">機構研發 2D 查檢表</h1>
+            <button class="reset-btn" onclick="resetList()">重置</button>
         </div>
 
-        <div id="list-container" class="checklist-wrapper">
-            <label class="checklist-item">
-                <input type="checkbox" id="item1">
-                <div class="checkbox-box"></div>
-                <div class="item-content">
-                    <span class="item-title">Note</span>
-                    <p class="item-desc">材質、表處、工法、顏色</p>
-                </div>
-            </label>
-
-            <label class="checklist-item">
-                <input type="checkbox" id="item2">
-                <div class="checkbox-box"></div>
-                <div class="item-content">
-                    <span class="item-title">CTQ 關鍵尺寸</span>
-                    <p class="item-desc">關鍵尺寸已標註公差（GD&T）與備註。</p>
-                </div>
-            </label>
-
-            <label class="checklist-item">
-                <input type="checkbox" id="item3">
-                <div class="checkbox-box"></div>
-                <div class="item-content">
-                    <span class="item-title">BOM 核對</span>
-                    <p class="item-desc">零件序號、數量與組裝檔一致，材質正確。</p>
-                </div>
-            </label>
-
-            <label class="checklist-item">
-                <input type="checkbox" id="item4">
-                <div class="checkbox-box"></div>
-                <div class="item-content">
-                    <span class="item-title">標題欄 & 技術要求</span>
-                    <p class="item-desc">圖號、日期、版本、表面處理要求填寫。</p>
-                </div>
-            </label>
-
-            <label class="checklist-item">
-                <input type="checkbox" id="item5">
-                <div class="checkbox-box"></div>
-                <div class="item-content">
-                    <span class="item-title">線型與清潔</span>
-                    <p class="item-desc">移除多餘的輔助線，隱藏線顯示符合標準。</p>
-                </div>
-            </label>
+        <div class="category-header" onclick="toggleCat('cat1')">一、視圖與佈局 <span>▾</span></div>
+        <div id="cat1" class="category-content">
+            <label class="checklist-item"><input type="checkbox" id="v1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">投影法確認</span><p class="item-desc">第一角/第三角法符號與邏輯一致</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">視圖完整性</span><p class="item-desc">三視圖足以表達所有幾何特徵</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v3"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Isometric 示意圖</span><p class="item-desc">包含輔助理解的 3D 視圖</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v4"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">剖視圖正確性</span><p class="item-desc">剖面線方向正確且無遮擋關鍵處</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v5"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">局部放大圖</span><p class="item-desc">微小特徵（倒角/溝槽）有放大標示</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v6"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">比例 Scale</span><p class="item-desc">圖框比例與實際比例相符</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v7"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">斷裂視圖</span><p class="item-desc">長型零件（Busbar）標註正確</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v8"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">圖面清潔度</span><p class="item-desc">移除重疊線段或多餘輔助線</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v9"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">切線顯示</span><p class="item-desc">圓角切線依規範隱藏或設為細線</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="v10"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">虛線 Hidden Lines</span><p class="item-desc">隱藏線顯示是否清晰不混亂</p></div></label>
         </div>
+
+        <div class="category-header" onclick="toggleCat('cat2')">二、尺寸標註 <span>▾</span></div>
+        <div id="cat2" class="category-content">
+            <label class="checklist-item"><input type="checkbox" id="d11"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">尺寸漏標檢查</span><p class="item-desc">加工者不需計算即可得所有尺寸</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d12"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">尺寸重複避免</span><p class="item-desc">不重複標註造成審圖困擾</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d13"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">基準面 Datum</span><p class="item-desc">A, B, C 面明確且符合加工基準</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d14"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">避免鏈式累計誤差</span><p class="item-desc">優先選用基準標註</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d15"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">直徑/半徑符號</span><p class="item-desc">正確使用 Φ 與 R 符號</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d16"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">孔位規格</span><p class="item-desc">深孔、沉孔符號與規格清晰</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d17"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">壁厚標註</span><p class="item-desc">鈑金或塑膠件壁厚已明確標註</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d18"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">角度標註</span><p class="item-desc">折彎或斜面角度明確</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d19"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">螺紋牙規</span><p class="item-desc">牙距、深度及底孔說明正確</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="d20"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">中心線/對稱標註</span><p class="item-desc">對稱特徵有標註中心線符號</p></div></label>
+        </div>
+
+        <div class="category-header" onclick="toggleCat('cat3')">三、公差與精度 <span>▾</span></div>
+        <div id="cat3" class="category-content">
+            <label class="checklist-item"><input type="checkbox" id="t21"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">一般公差等級</span><p class="item-desc">標題欄公差（精/中/粗）正確</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t22"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">關鍵尺寸 CTQ</span><p class="item-desc">是否有專屬標註符號（如圓圈）</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t23"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">配合尺寸精度</span><p class="item-desc">軸孔配合（如 H7/g6）合理</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t24"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">GD&T 幾何公差</span><p class="item-desc">真圓、平行、垂直度要求</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t25"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">位置度</span><p class="item-desc">孔位包含 MMC/LMC 狀態考慮</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t26"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面粗糙度 Ra</span><p class="item-desc">加工面或密封面 Ra 要求</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t27"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">平面度需求</span><p class="item-desc">導電接觸面（Busbar）之平面度</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t28"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">未註倒角範圍</span><p class="item-desc">未註明之倒角/圓角公差規範</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t29"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">熱漲冷縮收縮率</span><p class="item-desc">塑膠件尺寸已考慮收縮補償</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="t30"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">組裝累計公差</span><p class="item-desc">焊接件總長公差是否合理</p></div></label>
+        </div>
+
+        <div class="category-header" onclick="toggleCat('cat4')">四、材質與工藝 <span>▾</span></div>
+        <div id="cat4" class="category-content">
+            <label class="checklist-item"><input type="checkbox" id="m31"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">材質名稱確認</span><p class="item-desc">如 C1100, AL6061-T6 等</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m32"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">質別與硬度</span><p class="item-desc">Temper 要求（如 H, FH）</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m33"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面處理規範</span><p class="item-desc">鍍鎳、陽極、導電鉻酸鹽</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m34"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">塗層厚度要求</span><p class="item-desc">漆膜或鍍層 μm 範圍</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m35"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">去毛邊要求</span><p class="item-desc">銳角倒圓或 Deburring 說明</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m36"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">色號標註</span><p class="item-desc">RAL / Pantone / CMYK</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m37"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">重量預估</span><p class="item-desc">零件預估重量標示</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="m38"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">環保標記</span><p class="item-desc">符合 RoHS / REACH</p></div></label>
+        </div>
+
+        <div class="category-header" onclick="toggleCat('cat5')">五、標題欄與行政 <span>▾</span></div>
+        <div id="cat5" class="category-content">
+            <label class="checklist-item"><input type="checkbox" id="a41"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">圖號 P/N 核對</span><p class="item-desc">與 ERP/BOM 系統一致</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="a42"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Revision 版本</span><p class="item-desc">版次與變更紀錄相符</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="a43"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">日期與簽核</span><p class="item-desc">繪圖、審核日期填寫</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="a44"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Sheet 數量</span><p class="item-desc">例如 Sheet 1 of 2</p></div></label>
+            <label class="checklist-item"><input type="checkbox" id="a45"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">版權與機密</span><p class="item-desc">Confidential 標註</p></div></label>
+        </div>
+
     </div>
 
     <script>
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-        // 載入儲存的狀態 (依 DocumentID 或 Document Properties 連動需進一步 API 開發，此為本地儲存版)
         window.onload = () => {
             checkboxes.forEach(box => {
                 const savedStatus = localStorage.getItem(box.id);
                 if (savedStatus === 'true') box.checked = true;
             });
         };
-
-        // 監聽勾選動作並儲存
         checkboxes.forEach(box => {
             box.addEventListener('change', () => {
                 localStorage.setItem(box.id, box.checked);
             });
         });
-
-        // 重置功能
         function resetList() {
-            if(confirm('確定要清空所有勾選項目嗎？這將無法恢復。')) {
+            if(confirm('清空所有勾選？')) {
                 checkboxes.forEach(box => {
                     box.checked = false;
                     localStorage.removeItem(box.id);
                 });
             }
+        }
+        function toggleCat(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'none') ? 'block' : 'none';
         }
     </script>
 </body>
