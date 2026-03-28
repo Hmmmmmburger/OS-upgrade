@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,12 +35,17 @@
         .tab-button.active {
             background-color: #ffffff;
             color: #2563eb;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         /* --- 內容顯示控制 --- */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         /* --- 原有 Checklist 樣式 --- */
         .category-header {
@@ -55,10 +61,24 @@
             justify-content: space-between;
             align-items: center;
         }
-        .category-header:hover { background: #d1d5db; }
-        .item-title { font-size: 13.5px !important; }
-        .item-desc { font-size: 11px !important; color: #9ca3af; }
-        .checklist-item { padding: 10px 14px !important; margin-bottom: 6px; }
+
+        .category-header:hover {
+            background: #d1d5db;
+        }
+
+        .item-title {
+            font-size: 13.5px !important;
+        }
+
+        .item-desc {
+            font-size: 11px !important;
+            color: #9ca3af;
+        }
+
+        .checklist-item {
+            padding: 10px 14px !important;
+            margin-bottom: 6px;
+        }
 
         /* --- ISO 規範大標題 --- */
         .iso-section-title {
@@ -79,6 +99,7 @@
             padding: 12px;
             margin-bottom: 15px;
         }
+
         .iso-title {
             font-size: 13px;
             font-weight: 700;
@@ -87,6 +108,7 @@
             border-left: 4px solid #2563eb;
             padding-left: 8px;
         }
+
         .iso-table {
             width: 100%;
             border-collapse: collapse;
@@ -94,31 +116,54 @@
             table-layout: fixed;
             background-color: #ffffff;
         }
-        .iso-table th, .iso-table td {
+
+        .iso-table th,
+        .iso-table td {
             border: 1px solid #e5e7eb;
             padding: 6px 2px;
             text-align: center;
-            background-color: #ffffff; /* 預設白色底 */
+            background-color: #ffffff;
+            /* 預設白色底 */
         }
+
         /* 第一列(標題列)樣式：灰色背景 + 粗體 */
-        .iso-table thead th { 
-            background: #d1d5db; 
-            color: #1f2937; 
-            font-weight: 800; 
-        }
-        /* 第一欄樣式：粗體 */
-        .iso-table tbody td:first-child { 
-            font-weight: 800; 
+        .iso-table thead th {
+            background: #d1d5db;
             color: #1f2937;
+            font-weight: 800;
+        }
+
+        /* 第一欄樣式：粗體 */
+        .iso-table tbody td:first-child {
+            font-weight: 800;
+            color: #1f2937;
+        }
+
+        /* --- PEM 專用樣式 --- */
+        .pem-image-container {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .pem-image-container img {
+            max-width: 100%;
+            height: auto;
         }
     </style>
 </head>
+
 <body>
 
     <div class="sidebar-container">
         <div class="tab-container">
             <button class="tab-button active" onclick="switchTab(event, 'checklist')">Checklist</button>
             <button class="tab-button" onclick="switchTab(event, 'iso-standards')">ISO 標注規範</button>
+            <button class="tab-button" onclick="switchTab(event, 'pem-spec')">PEM 緊固件</button>
+
         </div>
 
         <div id="checklist" class="tab-content active">
@@ -128,43 +173,133 @@
             </div>
             <div class="category-header" onclick="toggleCat('cat1')">一、Note <span>▾</span></div>
             <div id="cat1" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="v1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">材質定義</span><p class="item-desc">特殊料需明定牌號</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="v2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面處理工法&顏色</span><p class="item-desc">依據功能定義膜厚</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="v3a"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">製造工法</span><p class="item-desc">可以打樣及量產兩方向定義</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="v3b"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">公差依據</span><p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="v4"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">特殊檢驗需求</span><p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="v5"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">帝王條款</span><p class="item-desc">Dimension not shown must refer to 3D model</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v1">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">材質定義</span>
+                        <p class="item-desc">特殊料需明定牌號</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="v2">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">表面處理工法&顏色</span>
+                        <p class="item-desc">依據功能定義膜厚</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="v3a">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">製造工法</span>
+                        <p class="item-desc">可以打樣及量產兩方向定義</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="v3b">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">公差依據</span>
+                        <p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="v4">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">特殊檢驗需求</span>
+                        <p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="v5">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">帝王條款</span>
+                        <p class="item-desc">Dimension not shown must refer to 3D model</p>
+                    </div>
+                </label>
             </div>
 
             <div class="category-header" onclick="toggleCat('cat2')">二、圖框 <span>▾</span></div>
             <div id="cat2" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="d11"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">品名＆料號</span><p class="item-desc">確保每頁都的資訊相同</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="d12"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Check & Approve</span><p class="item-desc">確認審核欄位</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="d13"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">CC & SC</span><p class="item-desc">關鍵(CC)影響安全法規；重要(SC)影響功能滿意度。</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="d14"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">ECO NO.</span><p class="item-desc">先至Odoo建立後貼上</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="d11">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">品名＆料號</span>
+                        <p class="item-desc">確保每頁都的資訊相同</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="d12">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">Check & Approve</span>
+                        <p class="item-desc">確認審核欄位</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="d13">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">CC & SC</span>
+                        <p class="item-desc">關鍵(CC)影響安全法規；重要(SC)影響功能滿意度。</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="d14">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">ECO NO.</span>
+                        <p class="item-desc">先至Odoo建立後貼上</p>
+                    </div>
+                </label>
             </div>
 
             <div class="category-header" onclick="toggleCat('cat3')">三、標註 <span>▾</span></div>
             <div id="cat3" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="t21"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">關鍵尺寸</span><p class="item-desc">組配尺寸大小及位置皆需定義</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="t22"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">重複標註？</span><p class="item-desc">是否有不同視圖對同尺寸重複標註</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="t23"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">牙孔＆通孔定義</span><p class="item-desc">下孔深、攻牙深、孔軸配合公差</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="t24"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">GD&T幾何公差</span><p class="item-desc">基準面定義，平面、平行、垂直度等</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="t26"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面粗糙度</span><p class="item-desc">所有密封面是否都有定義 Ra/Rz </p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="t21">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">關鍵尺寸</span>
+                        <p class="item-desc">組配尺寸大小及位置皆需定義</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="t22">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">重複標註？</span>
+                        <p class="item-desc">是否有不同視圖對同尺寸重複標註</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="t23">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">牙孔＆通孔定義</span>
+                        <p class="item-desc">下孔深、攻牙深、孔軸配合公差</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="t24">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">GD&T幾何公差</span>
+                        <p class="item-desc">基準面定義，平面、平行、垂直度等</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="t26">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">表面粗糙度</span>
+                        <p class="item-desc">所有密封面是否都有定義 Ra/Rz </p>
+                    </div>
+                </label>
             </div>
 
             <div class="category-header" onclick="toggleCat('cat4')">四、組合件 <span>▾</span></div>
             <div id="cat4" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="b1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">BOM</span><p class="item-desc">零件編號、名稱、材質、數量</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="b2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件球標定義</span><p class="item-desc">視圖中是否以球標標示清楚</p></div></label>
-                <label class="checklist-item"><input type="checkbox" id="b3"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件規範</span><p class="item-desc">公規牌號指定或客製尺寸規範</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="b1">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">BOM</span>
+                        <p class="item-desc">零件編號、名稱、材質、數量</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="b2">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">零件球標定義</span>
+                        <p class="item-desc">視圖中是否以球標標示清楚</p>
+                    </div>
+                </label>
+                <label class="checklist-item"><input type="checkbox" id="b3">
+                    <div class="checkbox-box"></div>
+                    <div class="item-content"><span class="item-title">零件規範</span>
+                        <p class="item-desc">公規牌號指定或客製尺寸規範</p>
+                    </div>
+                </label>
             </div>
         </div>
 
         <div id="iso-standards" class="tab-content">
-            
+
             <div class="iso-section-title">ISO 2768 板金公差</div>
-            
+
             <div class="iso-card">
                 <div class="iso-title">線性尺寸公差</div>
                 <table class="iso-table">
@@ -179,9 +314,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>f (精)</td><td>±0.05</td><td>±0.05</td><td>±0.1</td><td>±0.15</td><td>±0.2</td></tr>
-                        <tr><td>m (中)</td><td>±0.1</td><td>±0.1</td><td>±0.2</td><td>±0.3</td><td>±0.5</td></tr>
-                        <tr><td>c (粗)</td><td>±0.2</td><td>±0.3</td><td>±0.5</td><td>±0.8</td><td>±1.2</td></tr>
+                        <tr>
+                            <td>f (精)</td>
+                            <td>±0.05</td>
+                            <td>±0.05</td>
+                            <td>±0.1</td>
+                            <td>±0.15</td>
+                            <td>±0.2</td>
+                        </tr>
+                        <tr>
+                            <td>m (中)</td>
+                            <td>±0.1</td>
+                            <td>±0.1</td>
+                            <td>±0.2</td>
+                            <td>±0.3</td>
+                            <td>±0.5</td>
+                        </tr>
+                        <tr>
+                            <td>c (粗)</td>
+                            <td>±0.2</td>
+                            <td>±0.3</td>
+                            <td>±0.5</td>
+                            <td>±0.8</td>
+                            <td>±1.2</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -199,9 +355,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>f (精)</td><td>±1°</td><td>±0.5°</td><td>±0.3°</td><td>±0.2°</td></tr>
-                        <tr><td>m (中)</td><td>±1°</td><td>±1°</td><td>±0.5°</td><td>±0.3°</td></tr>
-                        <tr><td>c (粗)</td><td>±1°</td><td>±1.5°</td><td>±1°</td><td>±0.5°</td></tr>
+                        <tr>
+                            <td>f (精)</td>
+                            <td>±1°</td>
+                            <td>±0.5°</td>
+                            <td>±0.3°</td>
+                            <td>±0.2°</td>
+                        </tr>
+                        <tr>
+                            <td>m (中)</td>
+                            <td>±1°</td>
+                            <td>±1°</td>
+                            <td>±0.5°</td>
+                            <td>±0.3°</td>
+                        </tr>
+                        <tr>
+                            <td>c (粗)</td>
+                            <td>±1°</td>
+                            <td>±1.5°</td>
+                            <td>±1°</td>
+                            <td>±0.5°</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -219,13 +393,41 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>超精密研磨 / 拋光 (Superfinishing)</td><td>0.025~0.1</td><td>用於光學、精密軸承、航空級零件</td></tr>
-                        <tr><td>精密研磨 (Precision Grinding)</td><td>0.1~0.4</td><td>高精度軸、配合孔</td></tr>
-                        <tr><td>精車 (Fine Turning)</td><td>0.4~1.6</td><td>精密滑動配合零件</td></tr>
-                        <tr><td>一般車削 / 銑削 (General Turning/Milling)</td><td>1.6~3.2</td><td>常見機械加工零件</td></tr>
-                        <tr><td>粗銑 / 粗車 (Rough Machining)</td><td>3.2~12.5</td><td>結構件或非精密區域</td></tr>
-                        <tr><td>鑄造 / 鍛造 (Casting/Forging)</td><td>6.3~25</td><td>毛坯或次加工表面</td></tr>
-                        <tr><td>焊接表面 (Weld Surface)</td><td>12.5~50</td><td>焊縫及未修磨表面</td></tr>
+                        <tr>
+                            <td>超精密研磨 / 拋光 (Superfinishing)</td>
+                            <td>0.025~0.1</td>
+                            <td>用於光學、精密軸承、航空級零件</td>
+                        </tr>
+                        <tr>
+                            <td>精密研磨 (Precision Grinding)</td>
+                            <td>0.1~0.4</td>
+                            <td>高精度軸、配合孔</td>
+                        </tr>
+                        <tr>
+                            <td>精車 (Fine Turning)</td>
+                            <td>0.4~1.6</td>
+                            <td>精密滑動配合零件</td>
+                        </tr>
+                        <tr>
+                            <td>一般車削 / 銑削 (General Turning/Milling)</td>
+                            <td>1.6~3.2</td>
+                            <td>常見機械加工零件</td>
+                        </tr>
+                        <tr>
+                            <td>粗銑 / 粗車 (Rough Machining)</td>
+                            <td>3.2~12.5</td>
+                            <td>結構件或非精密區域</td>
+                        </tr>
+                        <tr>
+                            <td>鑄造 / 鍛造 (Casting/Forging)</td>
+                            <td>6.3~25</td>
+                            <td>毛坯或次加工表面</td>
+                        </tr>
+                        <tr>
+                            <td>焊接表面 (Weld Surface)</td>
+                            <td>12.5~50</td>
+                            <td>焊縫及未修磨表面</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -241,16 +443,238 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td>高精度配合</td><td>0.2 ~ 0.8</td><td>H7/g6 軸孔、導柱</td></tr>
-                        <tr><td>密封面</td><td>0.1 ~ 0.8</td><td>O-ring 接觸、避洩漏</td></tr>
-                        <tr><td>裝飾件＆外觀面</td><td>0.8 ~ 1.6</td><td>一般裝飾處理件</td></tr>
-                        <tr><td>結構件＆非配合區</td><td>3.2 ~ 12.5</td><td>焊接、支撐結構件</td></tr>
-                        <tr><td>鑄件毛胚</td><td>12.5 ~ 50</td><td>鍛造、鑄造原始表面</td></tr>
+                        <tr>
+                            <td>高精度配合</td>
+                            <td>0.2 ~ 0.8</td>
+                            <td>H7/g6 軸孔、導柱</td>
+                        </tr>
+                        <tr>
+                            <td>密封面</td>
+                            <td>0.1 ~ 0.8</td>
+                            <td>O-ring 接觸、避洩漏</td>
+                        </tr>
+                        <tr>
+                            <td>裝飾件＆外觀面</td>
+                            <td>0.8 ~ 1.6</td>
+                            <td>一般裝飾處理件</td>
+                        </tr>
+                        <tr>
+                            <td>結構件＆非配合區</td>
+                            <td>3.2 ~ 12.5</td>
+                            <td>焊接、支撐結構件</td>
+                        </tr>
+                        <tr>
+                            <td>鑄件毛胚</td>
+                            <td>12.5 ~ 50</td>
+                            <td>鍛造、鑄造原始表面</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
             <p class="item-desc" style="text-align: center;">*參照 ISO 2768-1 & ISO 1302 規範</p>
+        </div>
+
+        <div id="pem-spec" class="tab-content">
+            <div class="iso-section-title">PEM® Clinching Nuts (S/CLS/SP)</div>
+
+            <div class="pem-image-container">
+                <img src="pem_clinchnut_dim.png" alt="PEM 示意圖">
+                <p class="item-desc">A: Shank高度 | C: 鎖附直徑 | E: 外徑 | T: 總高度</p>
+            </div>
+
+
+
+            <div class="iso-card">
+                <div class="iso-title">PEM® S/CLS/SP 規格詳表 (Metric)</div>
+                <div style="overflow-x: auto;">
+                    <table class="iso-table" id="pemTableMain" style="min-width: 450px;">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Thread Code</th>
+                                <th>Shank Code</th>
+                                <th>Test Sheet Material</th>
+                                <th>Push out(N)</th>
+                                <th>Torque out(N-m)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td rowspan="6">S,CLS</td>
+                                <td rowspan="6">M2,M2.5,M3</td>
+                                <td>0</td>
+                                <td rowspan="3">5052-H34 Al</td>
+                                <td>280</td>
+                                <td>4.22</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>400</td>
+                                <td>0.9</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>750</td>
+                                <td>1.13</td>
+                            </tr>
+                            <tr>
+                                <td>0</td>
+                                <td rowspan="3">cold-rolled steel</td>
+                                <td>470</td>
+                                <td>1.47</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>550</td>
+                                <td>1.7</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1010</td>
+                                <td>2.03</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M2.5 x 0.45</td>
+                                <td>0</td>
+                                <td>0.8</td>
+                                <td>4.22</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.0</td>
+                                <td>4.22</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.4</td>
+                                <td>4.22</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M3 x 0.5</td>
+                                <td>0</td>
+                                <td>0.8</td>
+                                <td>4.22</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.0</td>
+                                <td>4.22</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.4</td>
+                                <td>4.22</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M3.5 x 0.6</td>
+                                <td>0</td>
+                                <td>0.8</td>
+                                <td>4.75</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.0</td>
+                                <td>4.75</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.4</td>
+                                <td>4.75</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M4 x 0.7</td>
+                                <td>0</td>
+                                <td>0.8</td>
+                                <td>5.41</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.0</td>
+                                <td>5.41</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.4</td>
+                                <td>5.41</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M5 x 0.8</td>
+                                <td>0</td>
+                                <td>0.8</td>
+                                <td>6.35</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.0</td>
+                                <td>6.35</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>1.4</td>
+                                <td>6.35</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="3">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="3">M6 x 1</td>
+                                <td>0</td>
+                                <td>1.15</td>
+                                <td>8.75</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>1.38</td>
+                                <td>8.75</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2.21</td>
+                                <td>8.75</td>
+                            </tr>
+
+                            <tr>
+                                <td rowspan="2">S, SS, CLS, CLSS, SP</td>
+                                <td rowspan="2">M8 x 1.25</td>
+                                <td>1</td>
+                                <td>1.4</td>
+                                <td>10.5</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>2.3</td>
+                                <td>10.5</td>
+                            </tr>
+
+                            <tr>
+                                <td>S, SS, CLS, CLSS, SP</td>
+                                <td>M10 x 1.5</td>
+                                <td>1</td>
+                                <td>2.4</td>
+                                <td>12.5</td>
+                            </tr>
+
+                            <tr>
+                                <td>S, SS, CLS, CLSS, SP</td>
+                                <td>M12 x 1.75</td>
+                                <td>1</td>
+                                <td>3.2</td>
+                                <td>17</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -269,6 +693,7 @@
             evt.currentTarget.classList.add("active");
         }
 
+
         // 原有 Checklist 邏輯 (包含存檔功能)
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         window.onload = () => {
@@ -284,7 +709,7 @@
         });
 
         function resetList() {
-            if(confirm('清空所有勾選？')) {
+            if (confirm('清空所有勾選？')) {
                 checkboxes.forEach(box => {
                     box.checked = false;
                     localStorage.removeItem(box.id);
@@ -298,4 +723,5 @@
         }
     </script>
 </body>
+
 </html>
