@@ -3,10 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional 2D Checklist</title>
+    <title>Professional 2D Assistant</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* 針對長清單的額外樣式優化 */
+        /* --- Tab 基礎樣式 --- */
+        .tab-container {
+            display: flex;
+            background-color: #e5e7eb;
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-button {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .tab-button.active {
+            background-color: #ffffff;
+            color: #2563eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* --- 內容顯示控制 --- */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* --- 原有 Checklist 樣式優化 --- */
         .category-header {
             background: #e5e7eb;
             padding: 8px 12px;
@@ -14,66 +49,158 @@
             font-size: 13px;
             font-weight: 700;
             color: #374151;
-            margin: 15px 0 8px 0;
+            margin: 10px 0 8px 0;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .category-header:hover { background: #d1d5db; }
-        .category-content { display: block; } /* 預設展開 */
         .item-title { font-size: 13.5px !important; }
         .item-desc { font-size: 11px !important; color: #9ca3af; }
         .checklist-item { padding: 10px 14px !important; margin-bottom: 6px; }
+
+        /* --- ISO 2768 表格樣式 --- */
+        .iso-card {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        .iso-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1f2937;
+            border-left: 4px solid #2563eb;
+            padding-left: 8px;
+        }
+        .iso-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+            table-layout: fixed;
+        }
+        .iso-table th, .iso-table td {
+            border: 1px solid #e5e7eb;
+            padding: 6px 2px;
+            text-align: center;
+        }
+        .iso-table thead th { background: #d1d5db; color: #1f2937; }
+        .class-label { background: #fef08a; font-weight: 700; } /* 黃色側邊欄 */
     </style>
 </head>
 <body>
 
     <div class="sidebar-container">
-        <div class="header">
-            <h1 class="header-title">2D check list</h1>
-            <button class="reset-btn" onclick="resetList()">重置</button>
+        <div class="tab-container">
+            <button class="tab-button active" onclick="switchTab(event, 'checklist')">Checklist</button>
+            <button class="tab-button" onclick="switchTab(event, 'iso2768')">ISO 2768</button>
         </div>
 
-        <div class="category-header" onclick="toggleCat('cat1')">一、Note <span>▾</span></div>
-        <div id="cat1" class="category-content">
-            <label class="checklist-item"><input type="checkbox" id="v1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">材質定義</span><p class="item-desc">特殊料需明定牌號</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="v2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面處理工法&顏色</span><p class="item-desc">依據功能定義膜厚</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="v3"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">製造工法</span><p class="item-desc">可以打樣及量產兩方向定義</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="v3"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">公差依據</span><p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="v4"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">特殊檢驗需求</span><p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="v5"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">帝王條款</span><p class="item-desc">Dimension not shown must refer to 3D model</p></div></label>
+        <div id="checklist" class="tab-content active">
+            <div class="header">
+                <h1 class="header-title">2D check list</h1>
+                <button class="reset-btn" onclick="resetList()">重置</button>
+            </div>
+
+            <div class="category-header" onclick="toggleCat('cat1')">一、Note <span>▾</span></div>
+            <div id="cat1" class="category-content">
+                <label class="checklist-item"><input type="checkbox" id="v1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">材質定義</span><p class="item-desc">特殊料需明定牌號</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面處理工法&顏色</span><p class="item-desc">依據功能定義膜厚</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v3a"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">製造工法</span><p class="item-desc">可以打樣及量產兩方向定義</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v3b"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">公差依據</span><p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v4"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">特殊檢驗需求</span><p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="v5"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">帝王條款</span><p class="item-desc">Dimension not shown must refer to 3D model</p></div></label>
+            </div>
+
+            <div class="category-header" onclick="toggleCat('cat2')">二、圖框 <span>▾</span></div>
+            <div id="cat2" class="category-content">
+                <label class="checklist-item"><input type="checkbox" id="d11"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">品名＆料號</span><p class="item-desc">確保每頁都的資訊相同</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="d12"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Check & Approve</span><p class="item-desc">確認審核欄位</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="d13"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">CC & SC</span><p class="item-desc">關鍵(CC)影響安全法規；重要(SC)影響功能滿意度。</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="d14"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">ECO NO.</span><p class="item-desc">先至Odoo建立後貼上</p></div></label>
+            </div>
+
+            <div class="category-header" onclick="toggleCat('cat3')">三、標註 <span>▾</span></div>
+            <div id="cat3" class="category-content">
+                <label class="checklist-item"><input type="checkbox" id="t21"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">關鍵尺寸</span><p class="item-desc">組配尺寸大小及位置皆需定義</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="t22"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">重複標註？</span><p class="item-desc">是否有不同視圖對同尺寸重複標註</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="t23"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">牙孔＆通孔定義</span><p class="item-desc">下孔深、攻牙深、孔軸配合公差</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="t24"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">GD&T幾何公差</span><p class="item-desc">基準面定義，平面、平行、垂直度等</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="t26"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面粗糙度</span><p class="item-desc">所有密封面是否都有定義 Ra/Rz </p></div></label>
+            </div>
+
+            <div class="category-header" onclick="toggleCat('cat4')">四、組合件 <span>▾</span></div>
+            <div id="cat4" class="category-content">
+                <label class="checklist-item"><input type="checkbox" id="b1"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">BOM</span><p class="item-desc">零件編號、名稱、材質、數量</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="b2"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件球標定義</span><p class="item-desc">視圖中是否以球標標示清楚</p></div></label>
+                <label class="checklist-item"><input type="checkbox" id="b3"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件規範</span><p class="item-desc">公規牌號指定或客製尺寸規範</p></div></label>
+            </div>
         </div>
 
-        <div class="category-header" onclick="toggleCat('cat2')">二、圖框 <span>▾</span></div>
-        <div id="cat2" class="category-content">
-            <label class="checklist-item"><input type="checkbox" id="d11"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">品名＆料號</span><p class="item-desc">確保每頁都的資訊相同</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="d12"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">Check & Approve</span><p class="item-desc">不重複標註造成審圖困擾</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="d13"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">CC & SC</span><p class="item-desc">
-            CC（關鍵性）: 會影響產品之安全性或法規要求，例如 : UL / 阻燃 / 絕緣耐壓 / 認證相關/安規開孔等…… | 
-            SC (重要性): 指若失效可能導致產品使用性能降低或功能失誤(氣密/導電等…...)，並顯著影響顧客對產品之滿意程度，例如 : 面粗度/變形度/阻抗值/鍍層/膜厚/壓接螺母等…...。</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="d14"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">ECO NO.</span><p class="item-desc">先至Odoo建立後貼上</p></div></label>
-        </div>
+        <div id="iso2768" class="tab-content">
+            <div class="iso-card">
+                <div class="iso-title">線性尺寸公差 (ISO 2768-1)</div>
+                <table class="iso-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">等級</th>
+                            <th>0.5~3</th>
+                            <th>3~6</th>
+                            <th>6~30</th>
+                            <th>30~120</th>
+                            <th>120~400</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="class-label">f (精)</td><td>±0.05</td><td>±0.05</td><td>±0.1</td><td>±0.15</td><td>±0.2</td></tr>
+                        <tr><td class="class-label">m (中)</td><td>±0.1</td><td>±0.1</td><td>±0.2</td><td>±0.3</td><td>±0.5</td></tr>
+                        <tr><td class="class-label">c (粗)</td><td>±0.2</td><td>±0.3</td><td>±0.5</td><td>±0.8</td><td>±1.2</td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-        <div class="category-header" onclick="toggleCat('cat3')">三、標註 <span>▾</span></div>
-        <div id="cat3" class="category-content">
-            <label class="checklist-item"><input type="checkbox" id="t21"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">關鍵尺寸</span><p class="item-desc">組配尺寸大小及位置皆需定義</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t22"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">重複標註？</span><p class="item-desc">是否有不同視圖對同尺寸重複標註</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t23"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">牙孔＆通孔定義</span><p class="item-desc">下孔深、攻牙深、孔軸配合公差</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t24"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">GD&T幾何公差</span><p class="item-desc">基準面使否定義，平面、平行、垂直度等要求</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t26"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">表面粗糙度</span><p class="item-desc">所有密封面是否都有定義 Ra/Rz </p></div></label>
-
-        </div>
-
-        <div class="category-header" onclick="toggleCat('cat3')">四、組合件 <span>▾</span></div>
-        <div id="cat3" class="category-content">
-            <label class="checklist-item"><input type="checkbox" id="t21"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">BOM</span><p class="item-desc">零件編號、零件名稱/材質/數量</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t22"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件球標定義</span><p class="item-desc">零件是否有在視圖中以球標標示清楚</p></div></label>
-            <label class="checklist-item"><input type="checkbox" id="t23"><div class="checkbox-box"></div><div class="item-content"><span class="item-title">零件規範</span><p class="item-desc">零件為公規：是否指定牌號，零件需客製：是否有詳細尺寸規範</p></div></label>
+            <div class="iso-card">
+                <div class="iso-title">角度尺寸公差 (度)</div>
+                <table class="iso-table">
+                    <thead>
+                        <tr>
+                            <th style="width:25%">等級</th>
+                            <th>≤10mm</th>
+                            <th>10~50</th>
+                            <th>50~120</th>
+                            <th>120~400</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td class="class-label">f (精)</td><td>±1°</td><td>±0.5°</td><td>±0.3°</td><td>±0.2°</td></tr>
+                        <tr><td class="class-label">m (中)</td><td>±1°</td><td>±1°</td><td>±0.5°</td><td>±0.3°</td></tr>
+                        <tr><td class="class-label">c (粗)</td><td>±1°</td><td>±1.5°</td><td>±1°</td><td>±0.5°</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="item-desc" style="text-align: center;">*數值依據 ISO 2768 標準製作</p>
         </div>
     </div>
 
     <script>
+        // Tab 切換邏輯
+        function switchTab(evt, tabName) {
+            const contents = document.getElementsByClassName("tab-content");
+            for (let i = 0; i < contents.length; i++) {
+                contents[i].classList.remove("active");
+            }
+            const buttons = document.getElementsByClassName("tab-button");
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        // 原有 Checklist 邏輯
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         window.onload = () => {
             checkboxes.forEach(box => {
@@ -86,6 +213,7 @@
                 localStorage.setItem(box.id, box.checked);
             });
         });
+
         function resetList() {
             if(confirm('清空所有勾選？')) {
                 checkboxes.forEach(box => {
@@ -94,6 +222,7 @@
                 });
             }
         }
+
         function toggleCat(id) {
             const el = document.getElementById(id);
             el.style.display = (el.style.display === 'none') ? 'block' : 'none';
