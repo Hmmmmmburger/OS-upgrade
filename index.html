@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional 2D Assistant</title>
+    <title>2D Assistant</title>
     <link rel="stylesheet" href="style.css">
     <style>
         /* --- Tab 基礎樣式 --- */
@@ -109,8 +109,18 @@
             padding-left: 8px;
         }
 
+        /* 新增：表格外部捲動容器 */
+        .table-scroll {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            /* 讓 iOS 裝置滑動更順暢 */
+            width: 100%;
+        }
+
         .iso-table {
             width: 100%;
+            min-width: 450px;
+            /* 新增：設定最小寬度，避免視窗過窄時文字擠壓，並觸發外層捲軸 */
             border-collapse: collapse;
             font-size: 11px;
             table-layout: fixed;
@@ -285,174 +295,182 @@
 
             <div class="iso-card">
                 <div class="iso-title">線性尺寸公差</div>
-                <table class="iso-table">
-                    <thead>
-                        <tr>
-                            <th>等級</th>
-                            <th>0.5~3(mm)</th>
-                            <th>3~6(mm)</th>
-                            <th>6~30(mm)</th>
-                            <th>30~120(mm)</th>
-                            <th>120~400(mm)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>f (精)</td>
-                            <td>±0.05</td>
-                            <td>±0.05</td>
-                            <td>±0.1</td>
-                            <td>±0.15</td>
-                            <td>±0.2</td>
-                        </tr>
-                        <tr>
-                            <td>m (中)</td>
-                            <td>±0.1</td>
-                            <td>±0.1</td>
-                            <td>±0.2</td>
-                            <td>±0.3</td>
-                            <td>±0.5</td>
-                        </tr>
-                        <tr>
-                            <td>c (粗)</td>
-                            <td>±0.2</td>
-                            <td>±0.3</td>
-                            <td>±0.5</td>
-                            <td>±0.8</td>
-                            <td>±1.2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="iso-table">
+                        <thead>
+                            <tr>
+                                <th>等級</th>
+                                <th>0.5~3(mm)</th>
+                                <th>3~6(mm)</th>
+                                <th>6~30(mm)</th>
+                                <th>30~120(mm)</th>
+                                <th>120~400(mm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>f (精)</td>
+                                <td>±0.05</td>
+                                <td>±0.05</td>
+                                <td>±0.1</td>
+                                <td>±0.15</td>
+                                <td>±0.2</td>
+                            </tr>
+                            <tr>
+                                <td>m (中)</td>
+                                <td>±0.1</td>
+                                <td>±0.1</td>
+                                <td>±0.2</td>
+                                <td>±0.3</td>
+                                <td>±0.5</td>
+                            </tr>
+                            <tr>
+                                <td>c (粗)</td>
+                                <td>±0.2</td>
+                                <td>±0.3</td>
+                                <td>±0.5</td>
+                                <td>±0.8</td>
+                                <td>±1.2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="iso-card">
                 <div class="iso-title">角度尺寸公差</div>
-                <table class="iso-table">
-                    <thead>
-                        <tr>
-                            <th>等級</th>
-                            <th>≤10mm</th>
-                            <th>10~50(mm)</th>
-                            <th>50~120(mm)</th>
-                            <th>120~400(mm)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>f (精)</td>
-                            <td>±1°</td>
-                            <td>±0.5°</td>
-                            <td>±0.3°</td>
-                            <td>±0.2°</td>
-                        </tr>
-                        <tr>
-                            <td>m (中)</td>
-                            <td>±1°</td>
-                            <td>±1°</td>
-                            <td>±0.5°</td>
-                            <td>±0.3°</td>
-                        </tr>
-                        <tr>
-                            <td>c (粗)</td>
-                            <td>±1°</td>
-                            <td>±1.5°</td>
-                            <td>±1°</td>
-                            <td>±0.5°</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="iso-table">
+                        <thead>
+                            <tr>
+                                <th>等級</th>
+                                <th>≤10mm</th>
+                                <th>10~50(mm)</th>
+                                <th>50~120(mm)</th>
+                                <th>120~400(mm)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>f (精)</td>
+                                <td>±1°</td>
+                                <td>±0.5°</td>
+                                <td>±0.3°</td>
+                                <td>±0.2°</td>
+                            </tr>
+                            <tr>
+                                <td>m (中)</td>
+                                <td>±1°</td>
+                                <td>±1°</td>
+                                <td>±0.5°</td>
+                                <td>±0.3°</td>
+                            </tr>
+                            <tr>
+                                <td>c (粗)</td>
+                                <td>±1°</td>
+                                <td>±1.5°</td>
+                                <td>±1°</td>
+                                <td>±0.5°</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="iso-section-title">表面粗糙度規範</div>
 
             <div class="iso-card">
                 <div class="iso-title">常見加工方式對照</div>
-                <table class="iso-table">
-                    <thead>
-                        <tr>
-                            <th>加工方式</th>
-                            <th>Ra (μm)</th>
-                            <th>說明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>超精密研磨 / 拋光 (Superfinishing)</td>
-                            <td>0.025~0.1</td>
-                            <td>用於光學、精密軸承、航空級零件</td>
-                        </tr>
-                        <tr>
-                            <td>精密研磨 (Precision Grinding)</td>
-                            <td>0.1~0.4</td>
-                            <td>高精度軸、配合孔</td>
-                        </tr>
-                        <tr>
-                            <td>精車 (Fine Turning)</td>
-                            <td>0.4~1.6</td>
-                            <td>精密滑動配合零件</td>
-                        </tr>
-                        <tr>
-                            <td>一般車削 / 銑削 (General Turning/Milling)</td>
-                            <td>1.6~3.2</td>
-                            <td>常見機械加工零件</td>
-                        </tr>
-                        <tr>
-                            <td>粗銑 / 粗車 (Rough Machining)</td>
-                            <td>3.2~12.5</td>
-                            <td>結構件或非精密區域</td>
-                        </tr>
-                        <tr>
-                            <td>鑄造 / 鍛造 (Casting/Forging)</td>
-                            <td>6.3~25</td>
-                            <td>毛坯或次加工表面</td>
-                        </tr>
-                        <tr>
-                            <td>焊接表面 (Weld Surface)</td>
-                            <td>12.5~50</td>
-                            <td>焊縫及未修磨表面</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="iso-table">
+                        <thead>
+                            <tr>
+                                <th>加工方式</th>
+                                <th>Ra (μm)</th>
+                                <th>說明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>超精密研磨 / 拋光 (Superfinishing)</td>
+                                <td>0.025~0.1</td>
+                                <td>用於光學、精密軸承、航空級零件</td>
+                            </tr>
+                            <tr>
+                                <td>精密研磨 (Precision Grinding)</td>
+                                <td>0.1~0.4</td>
+                                <td>高精度軸、配合孔</td>
+                            </tr>
+                            <tr>
+                                <td>精車 (Fine Turning)</td>
+                                <td>0.4~1.6</td>
+                                <td>精密滑動配合零件</td>
+                            </tr>
+                            <tr>
+                                <td>一般車削 / 銑削 (General Turning/Milling)</td>
+                                <td>1.6~3.2</td>
+                                <td>常見機械加工零件</td>
+                            </tr>
+                            <tr>
+                                <td>粗銑 / 粗車 (Rough Machining)</td>
+                                <td>3.2~12.5</td>
+                                <td>結構件或非精密區域</td>
+                            </tr>
+                            <tr>
+                                <td>鑄造 / 鍛造 (Casting/Forging)</td>
+                                <td>6.3~25</td>
+                                <td>毛坯或次加工表面</td>
+                            </tr>
+                            <tr>
+                                <td>焊接表面 (Weld Surface)</td>
+                                <td>12.5~50</td>
+                                <td>焊縫及未修磨表面</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="iso-card">
                 <div class="iso-title">依功能之選用建議</div>
-                <table class="iso-table">
-                    <thead>
-                        <tr>
-                            <th style="width:35%">功能需求</th>
-                            <th style="width:25%">Ra (μm)</th>
-                            <th>配合範例</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>高精度配合</td>
-                            <td>0.2 ~ 0.8</td>
-                            <td>H7/g6 軸孔、導柱</td>
-                        </tr>
-                        <tr>
-                            <td>密封面</td>
-                            <td>0.1 ~ 0.8</td>
-                            <td>O-ring 接觸、避洩漏</td>
-                        </tr>
-                        <tr>
-                            <td>裝飾件＆外觀面</td>
-                            <td>0.8 ~ 1.6</td>
-                            <td>一般裝飾處理件</td>
-                        </tr>
-                        <tr>
-                            <td>結構件＆非配合區</td>
-                            <td>3.2 ~ 12.5</td>
-                            <td>焊接、支撐結構件</td>
-                        </tr>
-                        <tr>
-                            <td>鑄件毛胚</td>
-                            <td>12.5 ~ 50</td>
-                            <td>鍛造、鑄造原始表面</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-scroll">
+                    <table class="iso-table">
+                        <thead>
+                            <tr>
+                                <th style="width:35%">功能需求</th>
+                                <th style="width:25%">Ra (μm)</th>
+                                <th>配合範例</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>高精度配合</td>
+                                <td>0.2 ~ 0.8</td>
+                                <td>H7/g6 軸孔、導柱</td>
+                            </tr>
+                            <tr>
+                                <td>密封面</td>
+                                <td>0.1 ~ 0.8</td>
+                                <td>O-ring 接觸、避洩漏</td>
+                            </tr>
+                            <tr>
+                                <td>裝飾件＆外觀面</td>
+                                <td>0.8 ~ 1.6</td>
+                                <td>一般裝飾處理件</td>
+                            </tr>
+                            <tr>
+                                <td>結構件＆非配合區</td>
+                                <td>3.2 ~ 12.5</td>
+                                <td>焊接、支撐結構件</td>
+                            </tr>
+                            <tr>
+                                <td>鑄件毛胚</td>
+                                <td>12.5 ~ 50</td>
+                                <td>鍛造、鑄造原始表面</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <p class="item-desc" style="text-align: center;">*參照 ISO 2768-1 & ISO 1302 規範</p>
