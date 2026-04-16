@@ -5,150 +5,366 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2D Assistant</title>
-    <link rel="stylesheet" href="style.css">
     <style>
-        /* --- Tab 基礎樣式 --- */
+        /* ===== Design Tokens ===== */
+        :root {
+            --bg:           #f4f4f2;
+            --surface:      #ffffff;
+            --border:       #d0d0cc;
+            --border-light: #e8e8e4;
+            --text:         #1c1c1a;
+            --muted:        #888880;
+            --label:        #555550;
+            --green-dark:   #1a6038;
+            --red-dark:     #981825;
+            --blue:         #1a3e78;
+            --sans: 'Calibri', 'Microsoft JhengHei', '微軟正黑體', sans-serif;
+        }
+
+        /* ===== 基礎設定 ===== */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: var(--sans);
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .sidebar-container {
+            padding: 14px;
+            max-width: 100%;
+        }
+
+        /* ===== Tab 導覽列 ===== */
         .tab-container {
             display: flex;
-            background-color: #e5e7eb;
-            border-radius: 8px;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             padding: 4px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             position: sticky;
             top: 0;
             z-index: 100;
+            gap: 3px;
         }
 
         .tab-button {
             flex: 1;
             background: none;
             border: none;
-            padding: 8px 12px;
-            font-size: 13px;
+            padding: 7px 10px;
+            font-size: 12.5px;
             font-weight: 600;
-            color: #6b7280;
+            font-family: var(--sans);
+            color: var(--muted);
             cursor: pointer;
-            border-radius: 6px;
-            transition: all 0.2s;
+            border-radius: 7px;
+            transition: all .15s;
+            letter-spacing: .02em;
+        }
+
+        .tab-button:hover {
+            color: var(--text);
+            background-color: var(--border-light);
         }
 
         .tab-button.active {
-            background-color: #ffffff;
-            color: #2563eb;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background-color: var(--surface);
+            color: var(--text);
+            box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
         }
 
-        /* --- 內容顯示控制 --- */
-        .tab-content {
-            display: none;
+        /* ===== 頁首 ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+            margin-bottom: 12px;
         }
 
-        .tab-content.active {
-            display: block;
-        }
-
-        /* --- 原有 Checklist 樣式 --- */
-        .category-header {
-            background: #e5e7eb;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 13px;
+        .header-title {
+            font-size: 15px;
             font-weight: 700;
-            color: #374151;
-            margin: 10px 0 8px 0;
+            color: var(--text);
+            margin: 0;
+            letter-spacing: .03em;
+        }
+
+        .reset-btn {
+            font-size: 11.5px;
+            font-weight: 500;
+            font-family: var(--sans);
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 4px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .reset-btn:hover {
+            border-color: var(--red-dark);
+            color: var(--red-dark);
+            background-color: #faeaec;
+        }
+
+        /* ===== 分類標題 ===== */
+        .category-header {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            padding: 7px 11px;
+            border-radius: 7px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--label);
+            margin: 10px 0 6px 0;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            letter-spacing: .04em;
+            transition: all .15s;
         }
 
         .category-header:hover {
-            background: #d1d5db;
+            border-color: var(--text);
+            color: var(--text);
+        }
+
+        .category-header .arrow {
+            color: var(--muted);
+            font-size: 11px;
+            transition: transform .15s;
+        }
+
+        /* ===== Checklist 卡片 ===== */
+        .checklist-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .checklist-item {
+            background-color: var(--surface);
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            transition: border-color .15s;
+            position: relative;
+        }
+
+        .checklist-item:hover {
+            border-color: var(--border);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkbox-box {
+            width: 18px;
+            height: 18px;
+            border: 1.5px solid var(--border);
+            border-radius: 5px;
+            background-color: var(--surface);
+            margin-top: 2px;
+            flex-shrink: 0;
+            transition: all .15s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .checklist-item input:checked ~ .checkbox-box {
+            background-color: var(--text);
+            border-color: var(--text);
+        }
+
+        .checkbox-box::after {
+            content: '';
+            display: none;
+            width: 4px;
+            height: 8px;
+            border: solid var(--surface);
+            border-width: 0 1.5px 1.5px 0;
+            transform: rotate(45deg);
+            margin-bottom: 1px;
+        }
+
+        .checklist-item input:checked ~ .checkbox-box::after {
+            display: block;
+        }
+
+        .item-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
         }
 
         .item-title {
-            font-size: 13.5px !important;
+            font-size: 13px !important;
+            font-weight: 600;
+            color: var(--text);
+            transition: color .15s;
         }
 
         .item-desc {
             font-size: 11px !important;
-            color: #9ca3af;
+            color: var(--muted);
+            margin: 0;
+            line-height: 1.5;
         }
 
-        .checklist-item {
-            padding: 10px 14px !important;
-            margin-bottom: 6px;
+        .checklist-item input:checked ~ .item-content .item-title {
+            color: var(--muted);
+            text-decoration: line-through;
         }
 
-        /* --- ISO 規範大標題 --- */
+        .checklist-item input:checked ~ .item-content .item-desc {
+            color: var(--border);
+        }
+
+        /* ===== 內容顯示控制 ===== */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ===== ISO / PEM 大標題 ===== */
         .iso-section-title {
-            font-size: 16px;
+            font-size: 13px;
             font-weight: 800;
-            color: #111827;
-            margin: 20px 0 12px 0;
+            color: var(--text);
+            margin: 18px 0 10px 0;
             padding-bottom: 5px;
-            border-bottom: 2px solid #374151;
+            border-bottom: 1.5px solid var(--border);
             display: block;
+            letter-spacing: .05em;
         }
 
-        /* --- 表格樣式優化 --- */
+        /* ===== ISO 卡片 ===== */
         .iso-card {
-            background: #fff;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
             padding: 12px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         .iso-title {
-            font-size: 13px;
+            font-size: 12.5px;
             font-weight: 700;
-            margin-bottom: 8px;
-            color: #4b5563;
-            border-left: 4px solid #2563eb;
+            margin-bottom: 9px;
+            color: var(--label);
+            border-left: 3px solid var(--blue);
             padding-left: 8px;
+            letter-spacing: .02em;
         }
 
-        /* 表格外部捲動容器 */
+        /* ===== 表格捲動容器 ===== */
         .table-scroll {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             width: 100%;
         }
 
-        /* --- 統一整合後的表格樣式 (Tab 2 與 Tab 3 共用) --- */
-        .pem-table, .iso-table {
+        /* ===== 統一表格樣式 ===== */
+        .pem-table,
+        .iso-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;
+            font-size: 11.5px;
             text-align: center;
-            border: 1px solid #ddd;
-            font-family: -apple-system, sans-serif;
-            background-color: #ffffff !important;
+            font-family: var(--sans);
+            background-color: var(--surface) !important;
         }
 
-        /* 預設所有單元格底色皆為「純白」，強制覆蓋任何繼承屬性 */
-        .pem-table th, .pem-table td,
-        .iso-table th, .iso-table td {
-            border: 1px solid #ddd;
-            padding: 6px;
-            background-color: #ffffff !important;
+        .pem-table th,
+        .pem-table td,
+        .iso-table th,
+        .iso-table td {
+            border: 1px solid var(--border-light);
+            padding: 5px 7px;
+            background-color: var(--surface) !important;
+            color: var(--text);
         }
 
-        /* 修正：第一列(標題列)樣式全部強制為淡灰色 */
-        .pem-table thead th, .iso-table thead th {
-            background-color: #f2f2f2 !important;
-            color: #333 !important;
-            font-weight: bold !important;
+        .pem-table thead th,
+        .iso-table thead th {
+            background-color: var(--bg) !important;
+            color: var(--label) !important;
+            font-weight: 700 !important;
+            font-size: 11px;
+            letter-spacing: .03em;
         }
 
-        /* 修正：為了解決複雜表格 rowspan 導致的錯色問題，
-           改用 class="gray-cell" 手動精準指定第一欄為淡灰色與粗體 */
         .pem-table tbody td.gray-cell,
         .iso-table tbody td.gray-cell {
-            background-color: #f2f2f2 !important;
-            font-weight: bold !important;
-            color: #333 !important;
+            background-color: var(--bg) !important;
+            font-weight: 700 !important;
+            color: var(--label) !important;
+        }
+
+        /* ===== PEM 圖片說明區 ===== */
+        .pem-info-block {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.04);
+            padding: 14px;
+            margin-bottom: 14px;
+        }
+
+        .pem-info-block img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 7px;
+        }
+
+        .pem-info-block h4 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .pem-info-block ul {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 11.5px;
+            color: var(--label);
+            line-height: 1.65;
+        }
+
+        .pem-info-block ul li {
+            margin-bottom: 6px;
+        }
+
+        /* ===== 頁腳備注 ===== */
+        .footnote {
+            text-align: center;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -162,136 +378,147 @@
             <button class="tab-button" onclick="switchTab(event, 'pem-standards')">PEM 規格表</button>
         </div>
 
+        <!-- ===== Tab 1: Checklist ===== -->
         <div id="checklist" class="tab-content active">
             <div class="header">
-                <h1 class="header-title">2D check list</h1>
+                <h1 class="header-title">2D Check List</h1>
                 <button class="reset-btn" onclick="resetList()">重置</button>
             </div>
-            <div class="category-header" onclick="toggleCat('cat1')">一、Note <span>▾</span></div>
+
+            <div class="category-header" onclick="toggleCat('cat1')">一、Note <span class="arrow">▾</span></div>
             <div id="cat1" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="v1">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">材質定義</span>
-                        <p class="item-desc">特殊料需明定牌號</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="v2">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">表面處理工法&顏色</span>
-                        <p class="item-desc">依據功能定義膜厚</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="v3a">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">製造工法</span>
-                        <p class="item-desc">可以打樣及量產兩方向定義</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="v3b">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">公差依據</span>
-                        <p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="v4">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">特殊檢驗需求</span>
-                        <p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="v5">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">帝王條款</span>
-                        <p class="item-desc">Dimension not shown must refer to 3D model</p>
-                    </div>
-                </label>
+                <div class="checklist-wrapper">
+                    <label class="checklist-item"><input type="checkbox" id="v1">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">材質定義</span>
+                            <p class="item-desc">特殊料需明定牌號</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="v2">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">表面處理工法&amp;顏色</span>
+                            <p class="item-desc">依據功能定義膜厚</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="v3a">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">製造工法</span>
+                            <p class="item-desc">可以打樣及量產兩方向定義</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="v3b">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">公差依據</span>
+                            <p class="item-desc">建議依各ISO/JIS規範，若無則依圖框fine</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="v4">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">特殊檢驗需求</span>
+                            <p class="item-desc">鹽霧、百格、氣密、阻抗、緊固件拉扭力等</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="v5">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">帝王條款</span>
+                            <p class="item-desc">Dimension not shown must refer to 3D model</p>
+                        </div>
+                    </label>
+                </div>
             </div>
 
-            <div class="category-header" onclick="toggleCat('cat2')">二、圖框 <span>▾</span></div>
+            <div class="category-header" onclick="toggleCat('cat2')">二、圖框 <span class="arrow">▾</span></div>
             <div id="cat2" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="d11">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">品名＆料號</span>
-                        <p class="item-desc">確保每頁都的資訊相同</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="d12">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">Check & Approve</span>
-                        <p class="item-desc">確認審核欄位</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="d13">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">CC & SC</span>
-                        <p class="item-desc">關鍵(CC)影響安全法規；重要(SC)影響功能滿意度。</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="d14">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">ECO NO.</span>
-                        <p class="item-desc">先至Odoo建立後貼上</p>
-                    </div>
-                </label>
+                <div class="checklist-wrapper">
+                    <label class="checklist-item"><input type="checkbox" id="d11">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">品名＆料號</span>
+                            <p class="item-desc">確保每頁都的資訊相同</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="d12">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">Check &amp; Approve</span>
+                            <p class="item-desc">確認審核欄位</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="d13">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">CC &amp; SC</span>
+                            <p class="item-desc">關鍵(CC)影響安全法規；重要(SC)影響功能滿意度。</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="d14">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">ECO NO.</span>
+                            <p class="item-desc">先至Odoo建立後貼上</p>
+                        </div>
+                    </label>
+                </div>
             </div>
 
-            <div class="category-header" onclick="toggleCat('cat3')">三、標註 <span>▾</span></div>
+            <div class="category-header" onclick="toggleCat('cat3')">三、標註 <span class="arrow">▾</span></div>
             <div id="cat3" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="t21">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">關鍵尺寸</span>
-                        <p class="item-desc">組配尺寸大小及位置皆需定義</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="t22">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">重複標註？</span>
-                        <p class="item-desc">是否有不同視圖對同尺寸重複標註</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="t23">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">牙孔＆通孔定義</span>
-                        <p class="item-desc">下孔深、攻牙深、孔軸配合公差</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="t24">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">GD&T幾何公差</span>
-                        <p class="item-desc">基準面定義，平面、平行、垂直度等</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="t26">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">表面粗糙度</span>
-                        <p class="item-desc">所有密封面是否都有定義 Ra/Rz </p>
-                    </div>
-                </label>
+                <div class="checklist-wrapper">
+                    <label class="checklist-item"><input type="checkbox" id="t21">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">關鍵尺寸</span>
+                            <p class="item-desc">組配尺寸大小及位置皆需定義</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="t22">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">重複標註？</span>
+                            <p class="item-desc">是否有不同視圖對同尺寸重複標註</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="t23">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">牙孔＆通孔定義</span>
+                            <p class="item-desc">下孔深、攻牙深、孔軸配合公差</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="t24">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">GD&amp;T幾何公差</span>
+                            <p class="item-desc">基準面定義，平面、平行、垂直度等</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="t26">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">表面粗糙度</span>
+                            <p class="item-desc">所有密封面是否都有定義 Ra/Rz </p>
+                        </div>
+                    </label>
+                </div>
             </div>
 
-            <div class="category-header" onclick="toggleCat('cat4')">四、組合件 <span>▾</span></div>
+            <div class="category-header" onclick="toggleCat('cat4')">四、組合件 <span class="arrow">▾</span></div>
             <div id="cat4" class="category-content">
-                <label class="checklist-item"><input type="checkbox" id="b1">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">BOM</span>
-                        <p class="item-desc">零件編號、名稱、材質、數量</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="b2">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">零件球標定義</span>
-                        <p class="item-desc">視圖中是否以球標標示清楚</p>
-                    </div>
-                </label>
-                <label class="checklist-item"><input type="checkbox" id="b3">
-                    <div class="checkbox-box"></div>
-                    <div class="item-content"><span class="item-title">零件規範</span>
-                        <p class="item-desc">公規牌號指定或客製尺寸規範</p>
-                    </div>
-                </label>
+                <div class="checklist-wrapper">
+                    <label class="checklist-item"><input type="checkbox" id="b1">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">BOM</span>
+                            <p class="item-desc">零件編號、名稱、材質、數量</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="b2">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">零件球標定義</span>
+                            <p class="item-desc">視圖中是否以球標標示清楚</p>
+                        </div>
+                    </label>
+                    <label class="checklist-item"><input type="checkbox" id="b3">
+                        <div class="checkbox-box"></div>
+                        <div class="item-content"><span class="item-title">零件規範</span>
+                            <p class="item-desc">公規牌號指定或客製尺寸規範</p>
+                        </div>
+                    </label>
+                </div>
             </div>
         </div>
 
+        <!-- ===== Tab 2: ISO 標注規範 ===== -->
         <div id="iso-standards" class="tab-content">
             <div class="iso-section-title">ISO 2768 板金公差</div>
             <div class="iso-card">
@@ -311,27 +538,15 @@
                         <tbody>
                             <tr>
                                 <td class="gray-cell">f (精)</td>
-                                <td>±0.05</td>
-                                <td>±0.05</td>
-                                <td>±0.1</td>
-                                <td>±0.15</td>
-                                <td>±0.2</td>
+                                <td>±0.05</td><td>±0.05</td><td>±0.1</td><td>±0.15</td><td>±0.2</td>
                             </tr>
                             <tr>
                                 <td class="gray-cell">m (中)</td>
-                                <td>±0.1</td>
-                                <td>±0.1</td>
-                                <td>±0.2</td>
-                                <td>±0.3</td>
-                                <td>±0.5</td>
+                                <td>±0.1</td><td>±0.1</td><td>±0.2</td><td>±0.3</td><td>±0.5</td>
                             </tr>
                             <tr>
                                 <td class="gray-cell">c (粗)</td>
-                                <td>±0.2</td>
-                                <td>±0.3</td>
-                                <td>±0.5</td>
-                                <td>±0.8</td>
-                                <td>±1.2</td>
+                                <td>±0.2</td><td>±0.3</td><td>±0.5</td><td>±0.8</td><td>±1.2</td>
                             </tr>
                         </tbody>
                     </table>
@@ -354,24 +569,15 @@
                         <tbody>
                             <tr>
                                 <td class="gray-cell">f (精)</td>
-                                <td>±1°</td>
-                                <td>±0.5°</td>
-                                <td>±0.3°</td>
-                                <td>±0.2°</td>
+                                <td>±1°</td><td>±0.5°</td><td>±0.3°</td><td>±0.2°</td>
                             </tr>
                             <tr>
                                 <td class="gray-cell">m (中)</td>
-                                <td>±1°</td>
-                                <td>±1°</td>
-                                <td>±0.5°</td>
-                                <td>±0.3°</td>
+                                <td>±1°</td><td>±1°</td><td>±0.5°</td><td>±0.3°</td>
                             </tr>
                             <tr>
                                 <td class="gray-cell">c (粗)</td>
-                                <td>±1°</td>
-                                <td>±1.5°</td>
-                                <td>±1°</td>
-                                <td>±0.5°</td>
+                                <td>±1°</td><td>±1.5°</td><td>±1°</td><td>±0.5°</td>
                             </tr>
                         </tbody>
                     </table>
@@ -391,41 +597,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="gray-cell">超精密研磨 / 拋光 (Superfinishing)</td>
-                                <td>0.025~0.1</td>
-                                <td>用於光學、精密軸承、航空級零件</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">精密研磨 (Precision Grinding)</td>
-                                <td>0.1~0.4</td>
-                                <td>高精度軸、配合孔</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">精車 (Fine Turning)</td>
-                                <td>0.4~1.6</td>
-                                <td>精密滑動配合零件</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">一般車削 / 銑削 (General Turning/Milling)</td>
-                                <td>1.6~3.2</td>
-                                <td>常見機械加工零件</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">粗銑 / 粗車 (Rough Machining)</td>
-                                <td>3.2~12.5</td>
-                                <td>結構件或非精密區域</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">鑄造 / 鍛造 (Casting/Forging)</td>
-                                <td>6.3~25</td>
-                                <td>毛坯或次加工表面</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">焊接表面 (Weld Surface)</td>
-                                <td>12.5~50</td>
-                                <td>焊縫及未修磨表面</td>
-                            </tr>
+                            <tr><td class="gray-cell">超精密研磨 / 拋光 (Superfinishing)</td><td>0.025~0.1</td><td>用於光學、精密軸承、航空級零件</td></tr>
+                            <tr><td class="gray-cell">精密研磨 (Precision Grinding)</td><td>0.1~0.4</td><td>高精度軸、配合孔</td></tr>
+                            <tr><td class="gray-cell">精車 (Fine Turning)</td><td>0.4~1.6</td><td>精密滑動配合零件</td></tr>
+                            <tr><td class="gray-cell">一般車削 / 銑削 (General Turning/Milling)</td><td>1.6~3.2</td><td>常見機械加工零件</td></tr>
+                            <tr><td class="gray-cell">粗銑 / 粗車 (Rough Machining)</td><td>3.2~12.5</td><td>結構件或非精密區域</td></tr>
+                            <tr><td class="gray-cell">鑄造 / 鍛造 (Casting/Forging)</td><td>6.3~25</td><td>毛坯或次加工表面</td></tr>
+                            <tr><td class="gray-cell">焊接表面 (Weld Surface)</td><td>12.5~50</td><td>焊縫及未修磨表面</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -443,70 +621,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="gray-cell">高精度配合</td>
-                                <td>0.2 ~ 0.8</td>
-                                <td>H7/g6 軸孔、導柱</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">密封面</td>
-                                <td>0.1 ~ 0.8</td>
-                                <td>O-ring 接觸、避洩漏</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">裝飾件＆外觀面</td>
-                                <td>0.8 ~ 1.6</td>
-                                <td>一般裝飾處理件</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">結構件＆非配合區</td>
-                                <td>3.2 ~ 12.5</td>
-                                <td>焊接、支撐結構件</td>
-                            </tr>
-                            <tr>
-                                <td class="gray-cell">鑄件毛胚</td>
-                                <td>12.5 ~ 50</td>
-                                <td>鍛造、鑄造原始表面</td>
-                            </tr>
+                            <tr><td class="gray-cell">高精度配合</td><td>0.2 ~ 0.8</td><td>H7/g6 軸孔、導柱</td></tr>
+                            <tr><td class="gray-cell">密封面</td><td>0.1 ~ 0.8</td><td>O-ring 接觸、避洩漏</td></tr>
+                            <tr><td class="gray-cell">裝飾件＆外觀面</td><td>0.8 ~ 1.6</td><td>一般裝飾處理件</td></tr>
+                            <tr><td class="gray-cell">結構件＆非配合區</td><td>3.2 ~ 12.5</td><td>焊接、支撐結構件</td></tr>
+                            <tr><td class="gray-cell">鑄件毛胚</td><td>12.5 ~ 50</td><td>鍛造、鑄造原始表面</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <p class="item-desc" style="text-align: center;">*參照 ISO 2768-1 & ISO 1302 規範</p>
+            <p class="footnote">*參照 ISO 2768-1 &amp; ISO 1302 規範</p>
         </div>
 
+        <!-- ===== Tab 3: PEM 規格表 ===== -->
         <div id="pem-standards" class="tab-content">
             <div class="iso-section-title">PEM 壓鉚螺母規格表</div>
 
-            <div
-                style="display: flex; flex-wrap: wrap; gap: 20px; align-items: center; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-                <div style="flex: 1; min-width: 250px; text-align: center;">
+            <div class="pem-info-block">
+                <div style="flex: 1; min-width: 240px; text-align: center;">
                     <img src="https://raw.githubusercontent.com/Hmmmmmburger/OS-upgrade/main/pem_clinchnut_dim.png"
-                        alt="PEM Clinch Nut Dimensions" style="max-width: 100%; height: auto; border-radius: 6px;">
+                        alt="PEM Clinch Nut Dimensions">
                 </div>
-                <div style="flex: 1.2; min-width: 280px; font-family: -apple-system, sans-serif;">
-                    <h4 style="margin: 0 0 10px 0; font-size: 14px; color: #1f2937; font-weight: 700;">適用板材硬度規範</h4>
-                    <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #4b5563; line-height: 1.6;">
-                        <li style="margin-bottom: 8px;"><strong>S / SS nuts</strong> are recommended for use in steel or
-                            aluminum sheets <strong>HRB 80 / HB 150</strong> or less.</li>
-                        <li style="margin-bottom: 8px;"><strong>CLS / CLSS nuts</strong> are recommended for use in
-                            steel or aluminum sheets <strong>HRB 70 / HB 125</strong> or less.</li>
-                        <li style="margin-bottom: 8px;"><strong>SP nuts</strong> are recommended for use in stainless
-                            steel sheets <strong>HRB 90 / HB 192</strong> or less.</li>
-                        <li><strong>CLA nuts</strong> are recommended for use in steel or aluminum sheets <strong>HRB 50
-                                / HB 82</strong> or less.</li>
+                <div style="flex: 1.2; min-width: 260px;">
+                    <h4>適用板材硬度規範</h4>
+                    <ul>
+                        <li><strong>S / SS nuts</strong> are recommended for use in steel or aluminum sheets <strong>HRB 80 / HB 150</strong> or less.</li>
+                        <li><strong>CLS / CLSS nuts</strong> are recommended for use in steel or aluminum sheets <strong>HRB 70 / HB 125</strong> or less.</li>
+                        <li><strong>SP nuts</strong> are recommended for use in stainless steel sheets <strong>HRB 90 / HB 192</strong> or less.</li>
+                        <li><strong>CLA nuts</strong> are recommended for use in steel or aluminum sheets <strong>HRB 50 / HB 82</strong> or less.</li>
                     </ul>
                 </div>
             </div>
 
             <div class="iso-card">
                 <div class="iso-title">S™/SS™/CLS™/CLSS™/SP™ Nuts</div>
-
                 <div class="table-scroll">
                     <table class="pem-table">
                         <thead>
                             <tr>
-                                <th rowspan="3" style="width: 30px;">System</th>
+                                <th rowspan="3" style="width:30px;">System</th>
                                 <th rowspan="2">Thread Size</th>
                                 <th colspan="3">Type Fastener Material</th>
                                 <th rowspan="2">Thread Code</th>
@@ -520,256 +673,88 @@
                                 <th rowspan="2">Min. Dist. Hole C/L To Edge (4)</th>
                             </tr>
                             <tr>
-                                <th style="font-weight: normal; font-size: 11px;">Carbon Steel</th>
-                                <th style="font-weight: normal; font-size: 11px;">Stainless Steel</th>
-                                <th style="font-weight: normal; font-size: 11px;">Hardened Stainless Steel</th>
+                                <th style="font-weight:normal;font-size:10.5px;">Carbon Steel</th>
+                                <th style="font-weight:normal;font-size:10.5px;">Stainless Steel</th>
+                                <th style="font-weight:normal;font-size:10.5px;">Hardened Stainless Steel</th>
                             </tr>
                         </thead>
-                        <tbody style="color: #444;">
+                        <tbody style="color:#444;">
                             <tr>
                                 <td class="gray-cell" rowspan="31">Metric</td>
-                                <td rowspan="3">M2 x 0.4</td>
-                                <td rowspan="3">S</td>
-                                <td rowspan="3">CLS</td>
-                                <td rowspan="3">SP</td>
-                                <td rowspan="3">M2</td>
-                                <td>0<sup>(2)</sup></td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">4.22</td>
-                                <td rowspan="3">4.2</td>
-                                <td rowspan="3">6.35</td>
-                                <td rowspan="3">1.5</td>
-                                <td rowspan="3">4.8</td>
+                                <td rowspan="3">M2 x 0.4</td><td rowspan="3">S</td><td rowspan="3">CLS</td><td rowspan="3">SP</td><td rowspan="3">M2</td>
+                                <td>0<sup>(2)</sup></td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">4.22</td><td rowspan="3">4.2</td><td rowspan="3">6.35</td><td rowspan="3">1.5</td><td rowspan="3">4.8</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="3">M2.5 x 0.45</td>
-                                <td rowspan="3">S</td>
-                                <td rowspan="3">CLS</td>
-                                <td rowspan="3">SP</td>
-                                <td rowspan="3">M2.5</td>
-                                <td>0</td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">4.22</td>
-                                <td rowspan="3">4.2</td>
-                                <td rowspan="3">6.35</td>
-                                <td rowspan="3">1.5</td>
-                                <td rowspan="3">4.8</td>
+                                <td rowspan="3">M2.5 x 0.45</td><td rowspan="3">S</td><td rowspan="3">CLS</td><td rowspan="3">SP</td><td rowspan="3">M2.5</td>
+                                <td>0</td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">4.22</td><td rowspan="3">4.2</td><td rowspan="3">6.35</td><td rowspan="3">1.5</td><td rowspan="3">4.8</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="3">M3 x 0.5</td>
-                                <td rowspan="3">S</td>
-                                <td rowspan="3">CLS</td>
-                                <td rowspan="3">SP</td>
-                                <td rowspan="3">M3</td>
-                                <td>0</td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">4.22</td>
-                                <td rowspan="3">4.2</td>
-                                <td rowspan="3">6.35</td>
-                                <td rowspan="3">1.5</td>
-                                <td rowspan="3">4.8</td>
+                                <td rowspan="3">M3 x 0.5</td><td rowspan="3">S</td><td rowspan="3">CLS</td><td rowspan="3">SP</td><td rowspan="3">M3</td>
+                                <td>0</td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">4.22</td><td rowspan="3">4.2</td><td rowspan="3">6.35</td><td rowspan="3">1.5</td><td rowspan="3">4.8</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="3">M3.5 x 0.6</td>
-                                <td rowspan="3">S</td>
-                                <td rowspan="3">CLS</td>
-                                <td rowspan="3">—</td>
-                                <td rowspan="3">M3.5</td>
-                                <td>0</td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">4.75</td>
-                                <td rowspan="3">4.73</td>
-                                <td rowspan="3">7.11</td>
-                                <td rowspan="3">1.5</td>
-                                <td rowspan="3">5.6</td>
+                                <td rowspan="3">M3.5 x 0.6</td><td rowspan="3">S</td><td rowspan="3">CLS</td><td rowspan="3">—</td><td rowspan="3">M3.5</td>
+                                <td>0</td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">4.75</td><td rowspan="3">4.73</td><td rowspan="3">7.11</td><td rowspan="3">1.5</td><td rowspan="3">5.6</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="3">M4 x 0.7</td>
-                                <td rowspan="3">S</td>
-                                <td rowspan="3">CLS</td>
-                                <td rowspan="3">SP</td>
-                                <td rowspan="3">M4</td>
-                                <td>0</td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">5.41</td>
-                                <td rowspan="3">5.38</td>
-                                <td rowspan="3">7.87</td>
-                                <td rowspan="3">2</td>
-                                <td rowspan="3">6.9</td>
+                                <td rowspan="3">M4 x 0.7</td><td rowspan="3">S</td><td rowspan="3">CLS</td><td rowspan="3">SP</td><td rowspan="3">M4</td>
+                                <td>0</td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">5.41</td><td rowspan="3">5.38</td><td rowspan="3">7.87</td><td rowspan="3">2</td><td rowspan="3">6.9</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="3">M5 x 0.8</td>
-                                <td rowspan="3">SS</td>
-                                <td rowspan="3">CLSS</td>
-                                <td rowspan="3">SP</td>
-                                <td rowspan="3">M5</td>
-                                <td>0</td>
-                                <td>0.77</td>
-                                <td>0.8</td>
-                                <td rowspan="3">6.35</td>
-                                <td rowspan="3">6.33</td>
-                                <td rowspan="3">8.64</td>
-                                <td rowspan="3">2</td>
-                                <td rowspan="3">7.1</td>
+                                <td rowspan="3">M5 x 0.8</td><td rowspan="3">SS</td><td rowspan="3">CLSS</td><td rowspan="3">SP</td><td rowspan="3">M5</td>
+                                <td>0</td><td>0.77</td><td>0.8</td>
+                                <td rowspan="3">6.35</td><td rowspan="3">6.33</td><td rowspan="3">8.64</td><td rowspan="3">2</td><td rowspan="3">7.1</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>0.97</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
+                            <tr><td>1</td><td>0.97</td><td>1</td></tr>
+                            <tr><td>2</td><td>1.38</td><td>1.4</td></tr>
 
                             <tr>
-                                <td rowspan="4">M6 x 1</td>
-                                <td rowspan="4">S<sup>(3)</sup></td>
-                                <td rowspan="4">CLS</td>
-                                <td rowspan="4">SP</td>
-                                <td rowspan="4">M6</td>
-                                <td>00<sup>(2)</sup></td>
-                                <td>0.89</td>
-                                <td>0.92</td>
-                                <td rowspan="4">8.75</td>
-                                <td rowspan="4">8.73</td>
-                                <td rowspan="4">11.18</td>
-                                <td rowspan="4">4.08</td>
-                                <td rowspan="4">8.6</td>
+                                <td rowspan="4">M6 x 1</td><td rowspan="4">S<sup>(3)</sup></td><td rowspan="4">CLS</td><td rowspan="4">SP</td><td rowspan="4">M6</td>
+                                <td>00<sup>(2)</sup></td><td>0.89</td><td>0.92</td>
+                                <td rowspan="4">8.75</td><td rowspan="4">8.73</td><td rowspan="4">11.18</td><td rowspan="4">4.08</td><td rowspan="4">8.6</td>
                             </tr>
-                            <tr>
-                                <td>0<sup>(2)</sup></td>
-                                <td>1.15</td>
-                                <td>1.2</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>2.21</td>
-                                <td>2.29</td>
-                            </tr>
+                            <tr><td>0<sup>(2)</sup></td><td>1.15</td><td>1.2</td></tr>
+                            <tr><td>1</td><td>1.38</td><td>1.4</td></tr>
+                            <tr><td>2</td><td>2.21</td><td>2.29</td></tr>
 
                             <tr>
-                                <td rowspan="2">M8 x 1.25</td>
-                                <td rowspan="2">S<sup>(3)</sup></td>
-                                <td rowspan="2">CLS</td>
-                                <td rowspan="2">SP</td>
-                                <td rowspan="2">M8</td>
-                                <td>1</td>
-                                <td>1.38</td>
-                                <td>1.4</td>
-                                <td rowspan="2">10.5</td>
-                                <td rowspan="2">10.47</td>
-                                <td rowspan="2">12.7</td>
-                                <td rowspan="2">5.47</td>
-                                <td rowspan="2">9.7</td>
+                                <td rowspan="2">M8 x 1.25</td><td rowspan="2">S<sup>(3)</sup></td><td rowspan="2">CLS</td><td rowspan="2">SP</td><td rowspan="2">M8</td>
+                                <td>1</td><td>1.38</td><td>1.4</td>
+                                <td rowspan="2">10.5</td><td rowspan="2">10.47</td><td rowspan="2">12.7</td><td rowspan="2">5.47</td><td rowspan="2">9.7</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>2.21</td>
-                                <td>2.29</td>
-                            </tr>
+                            <tr><td>2</td><td>2.21</td><td>2.29</td></tr>
 
                             <tr>
-                                <td rowspan="2">M10 x 1.5</td>
-                                <td rowspan="2">S</td>
-                                <td rowspan="2">CLS</td>
-                                <td rowspan="2">SP</td>
-                                <td rowspan="2">M10</td>
-                                <td>1</td>
-                                <td>2.21</td>
-                                <td>2.29</td>
-                                <td rowspan="2">14</td>
-                                <td rowspan="2">13.97</td>
-                                <td rowspan="2">17.35</td>
-                                <td rowspan="2">7.48</td>
-                                <td rowspan="2">13.5</td>
+                                <td rowspan="2">M10 x 1.5</td><td rowspan="2">S</td><td rowspan="2">CLS</td><td rowspan="2">SP</td><td rowspan="2">M10</td>
+                                <td>1</td><td>2.21</td><td>2.29</td>
+                                <td rowspan="2">14</td><td rowspan="2">13.97</td><td rowspan="2">17.35</td><td rowspan="2">7.48</td><td rowspan="2">13.5</td>
                             </tr>
-                            <tr>
-                                <td>2<sup>(2)</sup></td>
-                                <td>3.05</td>
-                                <td>3.18</td>
-                            </tr>
+                            <tr><td>2<sup>(2)</sup></td><td>3.05</td><td>3.18</td></tr>
 
                             <tr>
-                                <td>M12 x 1.75</td>
-                                <td>S</td>
-                                <td>—</td>
-                                <td>—</td>
-                                <td>M12</td>
-                                <td>1</td>
-                                <td>3.05</td>
-                                <td>3.18</td>
-                                <td>17</td>
-                                <td>16.95</td>
-                                <td>20.57</td>
-                                <td>8.5</td>
-                                <td>16</td>
+                                <td>M12 x 1.75</td><td>S</td><td>—</td><td>—</td><td>M12</td>
+                                <td>1</td><td>3.05</td><td>3.18</td>
+                                <td>17</td><td>16.95</td><td>20.57</td><td>8.5</td><td>16</td>
                             </tr>
                         </tbody>
                     </table>
@@ -791,278 +776,109 @@
                                 <th>Torque-out (N·m)</th>
                             </tr>
                         </thead>
-                        <tbody style="color: #444;">
+                        <tbody style="color:#444;">
                             <tr>
                                 <td class="gray-cell" rowspan="6">S<br>CLS</td>
                                 <td rowspan="6">M2<br>M2.5<br>M3</td>
-                                <td>0</td>
-                                <td rowspan="3">5052-H34<br>Aluminum</td>
-                                <td rowspan="3">6.7-8.9</td>
-                                <td>280</td>
-                                <td>0.9</td>
+                                <td>0</td><td rowspan="3">5052-H34<br>Aluminum</td><td rowspan="3">6.7-8.9</td><td>280</td><td>0.9</td>
                             </tr>
+                            <tr><td>1</td><td>400</td><td>1.13</td></tr>
+                            <tr><td>2</td><td>750</td><td>1.47</td></tr>
                             <tr>
-                                <td>1</td>
-                                <td>400</td>
-                                <td>1.13</td>
+                                <td>0</td><td rowspan="3">Cold-rolled<br>Steel</td><td rowspan="3">11.2-15.6</td><td>470</td><td>1.47</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>750</td>
-                                <td>1.47</td>
-                            </tr>
-                            <tr>
-                                <td>0</td>
-                                <td rowspan="3">Cold-rolled<br>Steel</td>
-                                <td rowspan="3">11.2-15.6</td>
-                                <td>470</td>
-                                <td>1.47</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>550</td>
-                                <td>1.7</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1010</td>
-                                <td>2.03</td>
-                            </tr>
+                            <tr><td>1</td><td>550</td><td>1.7</td></tr>
+                            <tr><td>2</td><td>1010</td><td>2.03</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="6">S<br>CLS</td>
                                 <td rowspan="6">M3.5</td>
-                                <td>0</td>
-                                <td rowspan="3">5052-H34<br>Aluminum</td>
-                                <td rowspan="3">11.2-13.5</td>
-                                <td>280</td>
-                                <td>1.8</td>
+                                <td>0</td><td rowspan="3">5052-H34<br>Aluminum</td><td rowspan="3">11.2-13.5</td><td>280</td><td>1.8</td>
                             </tr>
+                            <tr><td>1</td><td>400</td><td>1.92</td></tr>
+                            <tr><td>2</td><td>840</td><td>2.5</td></tr>
                             <tr>
-                                <td>1</td>
-                                <td>400</td>
-                                <td>1.92</td>
+                                <td>0</td><td rowspan="3">Cold-rolled<br>Steel</td><td rowspan="3">13.4-26.7</td><td>480</td><td>1.8</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>840</td>
-                                <td>2.5</td>
-                            </tr>
-                            <tr>
-                                <td>0</td>
-                                <td rowspan="3">Cold-rolled<br>Steel</td>
-                                <td rowspan="3">13.4-26.7</td>
-                                <td>480</td>
-                                <td>1.8</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>570</td>
-                                <td>2.3</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1210</td>
-                                <td>2.3</td>
-                            </tr>
+                            <tr><td>1</td><td>570</td><td>2.3</td></tr>
+                            <tr><td>2</td><td>1210</td><td>2.3</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="6">S<br>CLS</td>
                                 <td rowspan="6">M4</td>
-                                <td>0</td>
-                                <td rowspan="3">5052-H34<br>Aluminum</td>
-                                <td rowspan="3">11.2-13.4</td>
-                                <td>300</td>
-                                <td>2.37</td>
+                                <td>0</td><td rowspan="3">5052-H34<br>Aluminum</td><td rowspan="3">11.2-13.4</td><td>300</td><td>2.37</td>
                             </tr>
+                            <tr><td>1</td><td>470</td><td>2.6</td></tr>
+                            <tr><td>2</td><td>970</td><td>4</td></tr>
                             <tr>
-                                <td>1</td>
-                                <td>470</td>
-                                <td>2.6</td>
+                                <td>0</td><td rowspan="3">Cold-rolled<br>Steel</td><td rowspan="3">18-27</td><td>490</td><td>2.95</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>970</td>
-                                <td>4</td>
-                            </tr>
-                            <tr>
-                                <td>0</td>
-                                <td rowspan="3">Cold-rolled<br>Steel</td>
-                                <td rowspan="3">18-27</td>
-                                <td>490</td>
-                                <td>2.95</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>645</td>
-                                <td>4</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1250</td>
-                                <td>5.1</td>
-                            </tr>
+                            <tr><td>1</td><td>645</td><td>4</td></tr>
+                            <tr><td>2</td><td>1250</td><td>5.1</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="6">SS<br>CLSS</td>
                                 <td rowspan="6">M5</td>
-                                <td>0</td>
-                                <td rowspan="3">5052-H34<br>Aluminum</td>
-                                <td rowspan="3">11.2-15.6</td>
-                                <td>300</td>
-                                <td>3</td>
+                                <td>0</td><td rowspan="3">5052-H34<br>Aluminum</td><td rowspan="3">11.2-15.6</td><td>300</td><td>3</td>
                             </tr>
+                            <tr><td>1</td><td>480</td><td>3.6</td></tr>
+                            <tr><td>2</td><td>845</td><td>5.7</td></tr>
                             <tr>
-                                <td>1</td>
-                                <td>480</td>
-                                <td>3.6</td>
+                                <td>0</td><td rowspan="3">Cold-rolled<br>Steel</td><td rowspan="3">18-38</td><td>530</td><td>3.6</td>
                             </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>845</td>
-                                <td>5.7</td>
-                            </tr>
-                            <tr>
-                                <td>0</td>
-                                <td rowspan="3">Cold-rolled<br>Steel</td>
-                                <td rowspan="3">18-38</td>
-                                <td>530</td>
-                                <td>3.6</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>800</td>
-                                <td>4.5</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1420</td>
-                                <td>6.8</td>
-                            </tr>
+                            <tr><td>1</td><td>800</td><td>4.5</td></tr>
+                            <tr><td>2</td><td>1420</td><td>6.8</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="8">S<br>CLS</td>
                                 <td rowspan="8">M6</td>
-                                <td>00</td>
-                                <td rowspan="4">5052-H34<br>Aluminum</td>
-                                <td rowspan="4">18-32</td>
-                                <td>750</td>
-                                <td>6.5</td>
+                                <td>00</td><td rowspan="4">5052-H34<br>Aluminum</td><td rowspan="4">18-32</td><td>750</td><td>6.5</td>
                             </tr>
+                            <tr><td>0</td><td>970</td><td>7.9</td></tr>
+                            <tr><td>1</td><td>1580</td><td>10.2</td></tr>
+                            <tr><td>2</td><td>1580</td><td>14.1</td></tr>
                             <tr>
-                                <td>0</td>
-                                <td>970</td>
-                                <td>7.9</td>
+                                <td>00</td><td rowspan="4">Cold-rolled<br>Steel</td><td rowspan="4">27-36</td><td>900</td><td>10</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1580</td>
-                                <td>10.2</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1580</td>
-                                <td>14.1</td>
-                            </tr>
-                            <tr>
-                                <td>00</td>
-                                <td rowspan="4">Cold-rolled<br>Steel</td>
-                                <td rowspan="4">27-36</td>
-                                <td>900</td>
-                                <td>10</td>
-                            </tr>
-                            <tr>
-                                <td>0</td>
-                                <td>1380</td>
-                                <td>13</td>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1760</td>
-                                <td>17</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1760</td>
-                                <td>17</td>
-                            </tr>
+                            <tr><td>0</td><td>1380</td><td>13</td></tr>
+                            <tr><td>1</td><td>1760</td><td>17</td></tr>
+                            <tr><td>2</td><td>1760</td><td>17</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="4">S<br>CLS</td>
                                 <td rowspan="4">M8</td>
-                                <td>1</td>
-                                <td rowspan="2">5052-H34<br>Aluminum</td>
-                                <td rowspan="2">18-32</td>
-                                <td>1570</td>
-                                <td>13.6</td>
+                                <td>1</td><td rowspan="2">5052-H34<br>Aluminum</td><td rowspan="2">18-32</td><td>1570</td><td>13.6</td>
                             </tr>
+                            <tr><td>2</td><td>1570</td><td>18.1</td></tr>
                             <tr>
-                                <td>2</td>
-                                <td>1570</td>
-                                <td>18.1</td>
+                                <td>1</td><td rowspan="2">Cold-rolled<br>Steel</td><td rowspan="2">27-36</td><td>1870</td><td>18.7</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td rowspan="2">Cold-rolled<br>Steel</td>
-                                <td rowspan="2">27-36</td>
-                                <td>1870</td>
-                                <td>18.7</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>1870</td>
-                                <td>20.3</td>
-                            </tr>
+                            <tr><td>2</td><td>1870</td><td>20.3</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="4">S<br>CLS</td>
                                 <td rowspan="4">M10</td>
-                                <td>1</td>
-                                <td rowspan="2">5052-H34<br>Aluminum</td>
-                                <td rowspan="2">22-36</td>
-                                <td>1760</td>
-                                <td>32.7</td>
+                                <td>1</td><td rowspan="2">5052-H34<br>Aluminum</td><td rowspan="2">22-36</td><td>1760</td><td>32.7</td>
                             </tr>
+                            <tr><td>2</td><td>1760</td><td>32.7</td></tr>
                             <tr>
-                                <td>2</td>
-                                <td>1760</td>
-                                <td>32.7</td>
+                                <td>1</td><td rowspan="2">Cold-rolled<br>Steel</td><td rowspan="2">32-50</td><td>2020</td><td>36.2</td>
                             </tr>
-                            <tr>
-                                <td>1</td>
-                                <td rowspan="2">Cold-rolled<br>Steel</td>
-                                <td rowspan="2">32-50</td>
-                                <td>2020</td>
-                                <td>36.2</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>2020</td>
-                                <td>36.2</td>
-                            </tr>
+                            <tr><td>2</td><td>2020</td><td>36.2</td></tr>
 
                             <tr>
                                 <td class="gray-cell" rowspan="2">S</td>
                                 <td rowspan="2">M12</td>
-                                <td>1</td>
-                                <td>5052-H34<br>Aluminum</td>
-                                <td>31-40</td>
-                                <td>2113</td>
-                                <td>39.5</td>
+                                <td>1</td><td>5052-H34<br>Aluminum</td><td>31-40</td><td>2113</td><td>39.5</td>
                             </tr>
                             <tr>
-                                <td>1</td>
-                                <td>Cold-rolled<br>Steel</td>
-                                <td>44-67</td>
-                                <td>4670</td>
-                                <td>83.1</td>
+                                <td>1</td><td>Cold-rolled<br>Steel</td><td>44-67</td><td>4670</td><td>83.1</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
-            <p class="item-desc" style="text-align: center;">*參照 PEM 規格手冊</p>
+            <p class="footnote">*參照 PEM 規格手冊</p>
         </div>
     </div>
 
@@ -1070,19 +886,14 @@
         // Tab 切換邏輯
         function switchTab(evt, tabName) {
             const contents = document.getElementsByClassName("tab-content");
-            for (let i = 0; i < contents.length; i++) {
-                contents[i].classList.remove("active");
-            }
+            for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
             const buttons = document.getElementsByClassName("tab-button");
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].classList.remove("active");
-            }
+            for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
 
-
-        // 原有 Checklist 邏輯 (包含存檔功能)
+        // Checklist 存檔邏輯
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         window.onload = () => {
             checkboxes.forEach(box => {
